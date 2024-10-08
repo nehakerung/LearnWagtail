@@ -7,5 +7,15 @@
     <h3>{{ page.subtitle }}</h3>
 
     {{ page.body|richtext }}
+    <hr>
 
+    {% for blog_post in blogpages %}
+    <a href="{{ blog_post.url }}">
+        {{ blog_post.title }}
+</a>
+<p> {{ blog_post.subtitle }}</p>
+{% comment %}
+add image
+{% endcomment %}
+    {% endfor %}
 {% endblock %}}
