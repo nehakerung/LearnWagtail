@@ -34,7 +34,7 @@ class HomePage(Page):
     )
 
     cta_url =models.ForeignKey(
-        'wagtailcore.Page',
+        'blogpages.BlogDetail',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,

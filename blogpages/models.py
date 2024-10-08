@@ -1,4 +1,5 @@
 from django.db import models
+from modelcluster.contrib.taggit import ClusterTaggableManager
 from wagtail.images import get_image_model
 
 from wagtail.models import Page
@@ -15,7 +16,9 @@ class BlogIndex(Page):
     subpage_types = ['blogpages.BlogDetail']
 
     subtitle = models.CharField(max_length=100, blank=True)
-    body = RichTextField(blank=True)
+    body = RichTextField(
+        blank=True
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel('subtitle'),
@@ -28,10 +31,26 @@ class BlogIndex(Page):
         return context
 
 from django.core.exceptions import ValidationError
+from modelcluster.fields import ParentalKey
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from taggit.models import TaggedItemBase
 
+class BlogPageTags(TaggedItemBase):
+    content_object = ParentalKey(
+        'blogpages.BlogDetail',
+        related_name='tagged_items',
+        on_delete=models.CASCADE,
+    )
 class BlogDetail(Page):
     subtitle = models.CharField(max_length=100, blank=True)
-    body = RichTextField(blank=True)
+
+    body = RichTextField(
+        blank=True,
+        features=['h3', 'blockquote', 'image', 'strikethrough']
+    )
+
+    tags = ClusterTaggableManager(through=BlogPageTags, blank=True)
+
     parent_page_types = ['blogpages.BlogIndex']
     subpage_pages = []
 
@@ -45,6 +64,7 @@ class BlogDetail(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('subtitle'),
+        FieldPanel('tags'),
         FieldPanel('body'),
     ]
 
@@ -53,9 +73,6 @@ class BlogDetail(Page):
 
         errors = {}
 
-        if self.external_cta and self.internal_cta:
-            errors['external_cta'] = "Can't have both fields set at the same time"
-            errors['internal_cta'] = "Can't have both fields set at the same time"
         if 'blog' in self.title.lower():
             errors['title']="Cannot have the word 'Blog'"
 

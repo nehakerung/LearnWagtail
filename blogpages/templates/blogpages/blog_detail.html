@@ -2,5 +2,23 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
+    <style>
+        .rt{
+            max-width:50%;
+            border: 1px solid black;
+        }
+        .rt .richtext-image.thumbnail-150 {
+            border: 10px solid pink;
+        }
+    </style>
 
+<div class="rt">
+    {{ page.body|richtext }}
+</div>
+
+<h3>Tags:</h3>
+{% for tag in page.tags.all %}
+{{ tag.name }} <a href="/blog/?tag={{ tag.slug }}"> {{ tag.slug }}</a> <br>
+<br>
+{% endfor %}
 {% endblock %}
