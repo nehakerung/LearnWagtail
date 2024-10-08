@@ -13,4 +13,9 @@
 {% image page.image max-320x200 as custom_img %}
 <img src="{{ custom_img.url }}" alt="{{ custom_img.alt }}">
 
+<h3> Dynamic image serve view</h3>
+{% image_url page.image "fill-150x150|jpegquality-100" as custom_img2 %}
+{{ custom_img2 }}
+<img src="{{ custom_img2 }}" alt="Neha's flower">
+
 {% endblock content %}
