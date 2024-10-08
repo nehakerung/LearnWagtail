@@ -18,4 +18,11 @@
 {{ custom_img2 }}
 <img src="{{ custom_img2 }}" alt="Neha's flower">
 
+{% if page.custom_document %}
+    {{ page.custom_document.url }}
+    <a href="{{ page.custom_document.url }}" download> Download </a>
+    {{ page.custom_document.title }}
+    {{ page.custom_document.description }}
+{% endif %}
+
 {% endblock content %}

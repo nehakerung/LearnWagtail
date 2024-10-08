@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "home",
     "search",
     "images",
+    "documents",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -185,3 +186,5 @@ WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'tx
 WAGTAILIMAGES_IMAGE_MODEL = "images.CustomImage"
 
 WAGTAILDOCS_EXTENSIONS= ["jpg", "gif", "svg", "jpeg"]
+
+WAGTAILDOCS_DOCUMENT_MODEL = "documents.CustomDocument"
