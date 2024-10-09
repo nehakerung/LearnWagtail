@@ -1,9 +1,8 @@
 from django.db import models
-from modelcluster.contrib.taggit import ClusterTaggableManager
 from wagtail.images import get_image_model
 
 from wagtail.models import Page
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.admin.panels import FieldPanel
 
 # Create your models here.
@@ -41,16 +40,27 @@ class BlogPageTags(TaggedItemBase):
         related_name='tagged_items',
         on_delete=models.CASCADE,
     )
+
+from wagtail.blocks import  TextBlock
+from wagtail.images.blocks import ImageChooserBlock
+
 class BlogDetail(Page):
     subtitle = models.CharField(max_length=100, blank=True)
 
-    body = RichTextField(
-        blank=True,
-        features=['h3', 'blockquote', 'image', 'strikethrough']
-    )
-
     tags = ClusterTaggableManager(through=BlogPageTags, blank=True)
 
+    body = StreamField([
+        ('text', TextBlock()),
+        ('image', ImageChooserBlock()),
+    ],
+    block_counts={
+        'text': {'min_num': 1},
+        'image': {'max_num': 1},
+    },
+    use_json_field =True,
+    blank=True,
+    null=True,
+    )
     parent_page_types = ['blogpages.BlogIndex']
     subpage_pages = []
 
@@ -63,8 +73,8 @@ class BlogDetail(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel('subtitle'),
-        FieldPanel('tags'),
+        #FieldPanel('subtitle'),
+        #FieldPanel('tags'),
         FieldPanel('body'),
     ]
 
