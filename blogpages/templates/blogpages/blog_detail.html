@@ -1,0 +1,9 @@
+{% load wagtailimages_tags %}
+
+{% for block in page.body %}
+   {% if block.block_type == 'text' %}
+       {{ block.value }}
+   {% elif block.block_type == 'image' %}
+       {% image block.value fill-800x400 %}
+   {% endif %}
+{% endfor %}
