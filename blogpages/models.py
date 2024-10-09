@@ -43,23 +43,35 @@ class BlogPageTags(TaggedItemBase):
 
 from wagtail.blocks import  TextBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail import blocks
 
 class BlogDetail(Page):
     subtitle = models.CharField(max_length=100, blank=True)
-
     tags = ClusterTaggableManager(through=BlogPageTags, blank=True)
 
-    body = StreamField([
-        ('text', TextBlock()),
-        ('image', ImageChooserBlock()),
-    ],
-    block_counts={
-        'text': {'min_num': 1},
-        'image': {'max_num': 1},
-    },
-    use_json_field =True,
-    blank=True,
-    null=True,
+    body = StreamField(
+        [
+            ('text', TextBlock()),
+            ('image', ImageChooserBlock()),
+            ('carousel', blocks.StreamBlock(
+                [
+                    ('image', ImageChooserBlock()),
+                    ('quotation', blocks.StructBlock(
+                        [
+                            ('text', TextBlock()),
+                            ('author', TextBlock()),
+                        ],
+                    )),
+                ]
+            ))
+        ],
+        block_counts={
+            'text': {'min_num': 1},
+            'image': {'max_num': 1},
+        },
+        use_json_field=True,
+        blank=True,
+        null=True,
     )
     parent_page_types = ['blogpages.BlogIndex']
     subpage_pages = []
