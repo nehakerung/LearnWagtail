@@ -43,30 +43,49 @@ class BlogPageTags(TaggedItemBase):
 
 from wagtail.blocks import  TextBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.documents.blocks import DocumentChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 from wagtail import blocks
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    bio = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 class BlogDetail(Page):
     subtitle = models.CharField(max_length=100, blank=True)
     tags = ClusterTaggableManager(through=BlogPageTags, blank=True)
 
-    body = StreamField(
-        [
-            ('text', TextBlock()),
-            ('image', ImageChooserBlock()),
-            ('carousel', blocks.StreamBlock(
-                [
-                    ('image', ImageChooserBlock()),
-                    ('quotation', blocks.StructBlock(
-                        [
-                            ('text', TextBlock()),
-                            ('author', TextBlock()),
-                        ],
-                    )),
-                ]
-            ))
-        ],
+    body = StreamField([
+        ('static_block', blocks.StaticBlock(
+            admin_text='Hello world! I am a StaticBlock'
+        )),
+        # to try
+        ('text', TextBlock()),
+        # ('carousel', blocks.StreamBlock(
+        #     [
+        #         ('image', ImageChooserBlock()),
+        #         ('quotation', blocks.StructBlock(
+        #             [
+        #                 ('text', TextBlock()),
+        #                 ('author', TextBlock),
+        #             ],
+        #         )),
+        #     ]
+        # )),
+        #('page_link', blocks.PageChooserBlock()),
+        ('page', blocks.PageChooserBlock(
+            required=False,
+        )),
+        ('image', ImageChooserBlock()),
+        ('document', DocumentChooserBlock()),
+        ('author', SnippetChooserBlock('blogpages.Author')),
+    ],
+
         block_counts={
-            'text': {'min_num': 1},
+            #'text': {'min_num': 1},
             'image': {'max_num': 1},
         },
         use_json_field=True,
@@ -85,8 +104,8 @@ class BlogDetail(Page):
     )
 
     content_panels = Page.content_panels + [
-        #FieldPanel('subtitle'),
-        #FieldPanel('tags'),
+        FieldPanel('subtitle'),
+        FieldPanel('tags'),
         FieldPanel('body'),
     ]
 

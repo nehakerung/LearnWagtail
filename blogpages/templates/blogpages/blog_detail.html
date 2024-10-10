@@ -1,30 +1,34 @@
-{% extends "base.html" %}
 {% load wagtailimages_tags %}
-
-
 {% block content %}
-
-    {% for block in page.body %}
-
-       {% if block.block_type == 'text' %}
-
-       {% elif block.block_type == 'image' %}
-
-        {% elif block.block_type == 'carousel' %}
-
-            {% for slide in block.value %}
-                {% if slide.block_type == 'image' %}
-                    {% image slide.value fill-800x300 %}
-                {% elif slide.block_type == 'quotation' %}
-                    <p>
-                        {{ slide.value.text }}<br>
-                        <strong>
-                            &mdash; {{ slide.value.author }}
-                        </strong>
-                    </p>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-    {% endfor %}
+{% for block in page.body %}
+   {% if block.block_type == 'text' %}
+       {{ block.value }}
+   {% elif block.block_type == 'image' %}
+       {% image block.value fill-800x400 %}
+<!--Need to fix-->
+    {% elif block.block_type == 'doc' %}
+        {{ block.value.url }}
+    {% elif block.block_type == 'page' %}
+        <a href="{{ block.value.url }}">
+            {{ block.value.bio }}
+        </a>
+    {% elif block.block_type == 'author' %}
+        {{ block.value.bio }}
+    {% elif block.block_type == 'cta' %}
+    <div>
+        <a href="{{ block.value.page.url }}" class="button">
+            {% if block.value.button_text %}
+                {{ block.value.page.button_text }}
+            {% else %}
+                {{ block.value.button_text }}
+            {% endif %}
+        </a>
+    </div>
+    {% if block.block_type == 'static_block' %}
+                <div style='background-color: black; color: white; font-size: 24px; padding: 30px; text-align: center;'>
+                    Danger, Will Robinson!
+                </div>
+    {% endif %}
+{% endif %}
+{% endfor %}
 {% endblock %}
