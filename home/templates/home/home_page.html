@@ -5,7 +5,6 @@
     <h1>{{ page.title }} </h1>
     <h3>{{ page.subtitle }}</h3>
 
-
     {% if page.cta_url or page.cta_external_url %}
         {% if page.cta_url %}
             <a href="{{ page.cta_url.url }}">
@@ -29,7 +28,7 @@
     </a>
 {% endif %}
 <hr>
-{% comment %}
+
 {% image page.image max-320x200 as custom_img %}
 <img src="{{ custom_img.url }}" alt="{{ custom_img.alt }}">
 
@@ -44,6 +43,6 @@
     {{ page.custom_document.title }}
     {{ page.custom_document.description }}
 {% endif %}
-{% endcomment %}
+
 
 {% endblock content %}
